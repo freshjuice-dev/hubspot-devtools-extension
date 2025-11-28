@@ -2,16 +2,16 @@
  * Options page script for HubSpot DevTools
  */
 
-// Fun taglines for footer
+// Fun taglines for footer (prefix only, links added via DOM)
 const TAGLINES = [
-  'Squeezed by <a href="https://alex.zappa.dev" target="_blank">Alex Zappa</a> at <a href="https://freshjuice.dev" target="_blank">FreshJuice</a>',
-  'Freshly pressed by <a href="https://alex.zappa.dev" target="_blank">Alex Zappa</a> at <a href="https://freshjuice.dev" target="_blank">FreshJuice</a>',
-  'Blended with care by <a href="https://alex.zappa.dev" target="_blank">Alex Zappa</a> at <a href="https://freshjuice.dev" target="_blank">FreshJuice</a>',
-  'Juiced up by <a href="https://alex.zappa.dev" target="_blank">Alex Zappa</a> at <a href="https://freshjuice.dev" target="_blank">FreshJuice</a>',
-  'Cold-pressed by <a href="https://alex.zappa.dev" target="_blank">Alex Zappa</a> at <a href="https://freshjuice.dev" target="_blank">FreshJuice</a>',
-  'Hand-squeezed by <a href="https://alex.zappa.dev" target="_blank">Alex Zappa</a> at <a href="https://freshjuice.dev" target="_blank">FreshJuice</a>',
-  'Zested with love by <a href="https://alex.zappa.dev" target="_blank">Alex Zappa</a> at <a href="https://freshjuice.dev" target="_blank">FreshJuice</a>',
-  'Pulp-free, crafted by <a href="https://alex.zappa.dev" target="_blank">Alex Zappa</a> at <a href="https://freshjuice.dev" target="_blank">FreshJuice</a>',
+  'Squeezed by',
+  'Freshly pressed by',
+  'Blended with care by',
+  'Juiced up by',
+  'Cold-pressed by',
+  'Hand-squeezed by',
+  'Zested with love by',
+  'Pulp-free, crafted by',
 ];
 
 // DOM Elements
@@ -28,9 +28,24 @@ const footerTagline = document.getElementById('footerTagline');
  * Initialize options page with current state
  */
 async function initOptions() {
-  // Set random tagline
-  const randomTagline = TAGLINES[Math.floor(Math.random() * TAGLINES.length)];
-  footerTagline.innerHTML = randomTagline;
+  // Set random tagline using DOM methods (avoids innerHTML security warning)
+  const randomPrefix = TAGLINES[Math.floor(Math.random() * TAGLINES.length)];
+  footerTagline.textContent = '';
+  footerTagline.appendChild(document.createTextNode(randomPrefix + ' '));
+
+  const alexLink = document.createElement('a');
+  alexLink.href = 'https://alex.zappa.dev';
+  alexLink.target = '_blank';
+  alexLink.textContent = 'Alex Zappa';
+  footerTagline.appendChild(alexLink);
+
+  footerTagline.appendChild(document.createTextNode(' at '));
+
+  const fjLink = document.createElement('a');
+  fjLink.href = 'https://freshjuice.dev';
+  fjLink.target = '_blank';
+  fjLink.textContent = 'FreshJuice';
+  footerTagline.appendChild(fjLink);
 
   // Load current state
   const state = await getState();
