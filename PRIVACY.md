@@ -19,6 +19,13 @@ Specifically, we do NOT collect:
 - Analytics or usage data
 - Cookies or tracking information
 
+### Content Modification
+
+The extension modifies link URLs on web pages (to add debug parameters) directly in your browser. This modification:
+- Happens entirely locally in your browser
+- Is never stored or transmitted anywhere
+- Only occurs on domains you have explicitly allowed
+
 ### Data Storage
 
 The extension stores only your preferences locally in your browser using the browser's built-in storage API (`chrome.storage.sync` or `browser.storage.sync`). This includes:
