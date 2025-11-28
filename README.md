@@ -2,6 +2,8 @@
 
 A browser extension for HubSpot CMS developers with quick access to debug parameters and HubL documentation.
 
+**[Learn more at freshjuice.dev/hubspot-devtools](https://freshjuice.dev/hubspot-devtools/)**
+
 ## Features
 
 - **Debug Mode Toggle** - Quickly add `hsDebug=true` to your current page
@@ -10,6 +12,30 @@ A browser extension for HubSpot CMS developers with quick access to debug parame
 - **Auto-apply to Links** - Automatically propagate debug parameters to internal links
 - **HubL Quick Links** - Fast access to HubL documentation (Functions, Variables, Filters, Loops, If Statements, HubDB)
 - **Design Manager** - One-click access to HubSpot Design Manager
+
+## Screenshots
+
+### Chrome
+
+<p align="center">
+  <img src="store-assets/screenshot-1.png" width="400" alt="Chrome - Popup (Light Mode)">
+  <img src="store-assets/screenshot-2.png" width="400" alt="Chrome - Settings (Light Mode)">
+</p>
+<p align="center">
+  <img src="store-assets/screenshot-3.png" width="400" alt="Chrome - Popup (Dark Mode)">
+  <img src="store-assets/screenshot-4.png" width="400" alt="Chrome - Settings (Dark Mode)">
+</p>
+
+### Firefox
+
+<p align="center">
+  <img src="store-assets/ff-screenshot-1.png" width="400" alt="Firefox - Popup (Light Mode)">
+  <img src="store-assets/ff-screenshot-2.png" width="400" alt="Firefox - Settings (Light Mode)">
+</p>
+<p align="center">
+  <img src="store-assets/ff-screenshot-3.png" width="400" alt="Firefox - Popup (Dark Mode)">
+  <img src="store-assets/ff-screenshot-4.png" width="400" alt="Firefox - Settings (Dark Mode)">
+</p>
 
 ## Installation
 
