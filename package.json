@@ -1,0 +1,60 @@
+{
+  "name": "freshjuice-hubspot-devtools",
+  "version": "1.0.0",
+  "description": "FreshJuice HubSpot DevTools - A browser extension for HubSpot CMS developers with quick access to debug parameters and HubL documentation",
+  "author": {
+    "name": "FreshJuice",
+    "email": "alex@freshjuice.dev",
+    "url": "https://freshjuice.dev"
+  },
+  "contributors": [
+    {
+      "name": "Alex Zappa",
+      "url": "https://alex.zappa.dev"
+    }
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/freshjuice-dev/hubspot-devtools-extension.git"
+  },
+  "homepage": "https://freshjuice.dev",
+  "bugs": {
+    "url": "https://github.com/freshjuice-dev/hubspot-devtools-extension/issues"
+  },
+  "keywords": [
+    "hubspot",
+    "devtools",
+    "developer-tools",
+    "browser-extension",
+    "chrome-extension",
+    "firefox-addon",
+    "cms",
+    "debug"
+  ],
+  "scripts": {
+    "build": "node scripts/build.js",
+    "build:chrome": "node scripts/build.js --target=chrome",
+    "build:firefox": "node scripts/build.js --target=firefox",
+    "build:all": "npm run build:chrome && npm run build:firefox",
+    "zip": "node scripts/zip.js",
+    "zip:chrome": "node scripts/zip.js --target=chrome",
+    "zip:firefox": "node scripts/zip.js --target=firefox",
+    "zip:all": "npm run zip:chrome && npm run zip:firefox",
+    "icons": "node scripts/generate-icons.js",
+    "dev": "node scripts/build.js --watch",
+    "dev:chrome": "node scripts/build.js --target=chrome --watch",
+    "dev:firefox": "node scripts/build.js --target=firefox --watch",
+    "clean": "rm -rf dist",
+    "release": "npm run clean && npm run build:all && npm run zip:all"
+  },
+  "devDependencies": {
+    "archiver": "^7.0.0",
+    "chokidar": "^3.6.0",
+    "fs-extra": "^11.2.0",
+    "sharp": "^0.34.5"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

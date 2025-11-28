@@ -1,0 +1,72 @@
+name: Build Extension
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build extensions
+        run: npm run build:all
+
+      - name: Create zip packages
+        run: npm run zip:all
+
+      - name: Upload Chrome build
+        uses: actions/upload-artifact@v4
+        with:
+          name: chrome-extension
+          path: dist/hubspot-devtools-chrome-*.zip
+
+      - name: Upload Firefox build
+        uses: actions/upload-artifact@v4
+        with:
+          name: firefox-extension
+          path: dist/hubspot-devtools-firefox-*.zip
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install and build
+        run: |
+          npm ci
+          npm run release
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            dist/*.zip
+          generate_release_notes: true

@@ -1,0 +1,58 @@
+{
+  "manifest_version": 2,
+  "name": "FreshJuice HubSpot DevTools",
+  "description": "Quick access to HubSpot debug parameters and HubL documentation for CMS developers",
+  "version": "1.0.0",
+  "developer": {
+    "name": "FreshJuice",
+    "url": "https://freshjuice.dev"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "hubspot-devtools@freshjuice.dev",
+      "strict_min_version": "109.0"
+    }
+  },
+  "browser_action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "HubSpot DevTools",
+    "default_icon": {
+      "16": "assets/icons/icon-16.png",
+      "32": "assets/icons/icon-32.png",
+      "48": "assets/icons/icon-48.png"
+    }
+  },
+  "background": {
+    "scripts": ["lib/browser-api.js", "background/background.js"],
+    "persistent": false
+  },
+  "permissions": [
+    "storage",
+    "tabs",
+    "activeTab",
+    "<all_urls>"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["lib/browser-api.js", "lib/url-params.js", "content/content-script.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "commands": {
+    "toggle-debug": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+1",
+        "mac": "Command+Shift+1"
+      },
+      "description": "Toggle hsDebug=true"
+    },
+    "toggle-cache-buster": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+2",
+        "mac": "Command+Shift+2"
+      },
+      "description": "Toggle Cache Buster"
+    }
+  }
+}

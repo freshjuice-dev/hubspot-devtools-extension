@@ -1,0 +1,309 @@
+:root {
+  /* Brand Colors - FreshJuice Schema */
+  --primary-color: #ea580c;      /* orange-600 */
+  --primary-hover: #f97316;      /* orange-500 */
+  --accent-color: #dc2626;       /* red-600 */
+
+  /* Background Colors */
+  --bg-color: #fafafa;           /* zinc-50 */
+  --card-bg: #f4f4f5;            /* zinc-100 */
+
+  /* Text Colors */
+  --text-color: #18181b;         /* zinc-900 */
+  --text-secondary: #52525b;     /* zinc-600 */
+  --text-muted: #71717a;         /* zinc-500 */
+
+  /* Border Colors */
+  --border-color: #d1d5db;       /* gray-300 */
+  --border-brand: #fed7aa;       /* orange-200 */
+
+  /* Interactive Colors */
+  --toggle-on: #16a34a;          /* green-600 */
+  --toggle-off: #d1d5db;         /* gray-300 */
+
+  /* Effects */
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --focus-ring: rgba(234, 88, 12, 0.3);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Background Colors - Dark */
+    --bg-color: #18181b;         /* zinc-900 */
+    --card-bg: #27272a;          /* zinc-800 */
+
+    /* Text Colors - Dark */
+    --text-color: #fafafa;       /* zinc-50 */
+    --text-secondary: #a1a1aa;   /* zinc-400 */
+    --text-muted: #71717a;       /* zinc-500 */
+
+    /* Border Colors - Dark */
+    --border-color: #3f3f46;     /* zinc-700 */
+    --border-brand: #9a3412;     /* orange-800 */
+
+    /* Effects - Dark */
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  font-size: 14px;
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  min-width: 320px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.popup-container {
+  width: 320px;
+  padding: 16px;
+}
+
+/* Header */
+.popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+}
+
+.header-logo {
+  width: 50px;
+  height: 50px;
+  -webkit-user-drag: none;
+  user-drag: none;
+  pointer-events: none;
+}
+
+.header-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.header-brand-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--primary-color);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.header-app-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-color);
+  line-height: 1.2;
+}
+
+.settings-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  padding: 4px;
+  border-radius: 6px;
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.settings-icon:hover {
+  color: var(--primary-color);
+  background-color: var(--card-bg);
+}
+
+/* Toggle Cards */
+.toggle-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-brand);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  transition: border-color 0.2s;
+  cursor: pointer;
+}
+
+.toggle-card:hover {
+  border-color: var(--primary-hover);
+}
+
+.toggle-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.toggle-label {
+  font-weight: 500;
+  color: var(--text-color);
+  cursor: pointer;
+}
+
+.toggle-param {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-family: 'SF Mono', Monaco, 'Consolas', monospace;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--toggle-off);
+  transition: 0.3s;
+  border-radius: 24px;
+}
+
+.toggle-slider::before {
+  position: absolute;
+  content: '';
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-switch input:checked + .toggle-slider {
+  background-color: var(--toggle-on);
+}
+
+.toggle-switch input:checked + .toggle-slider::before {
+  transform: translateX(20px);
+}
+
+.toggle-switch input:focus + .toggle-slider {
+  box-shadow: 0 0 0 2px var(--focus-ring);
+}
+
+/* Tools Section */
+.tools-section {
+  margin-top: 12px;
+}
+
+/* Action Button (Secondary) */
+.action-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 8px 12px;
+  margin-top: 10px;
+  background-color: var(--bg-color);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.action-button:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.action-button svg {
+  opacity: 0.6;
+}
+
+/* Quick Links */
+.quick-links {
+  padding: 10px;
+  background-color: var(--card-bg);
+  border-radius: 8px;
+}
+
+.quick-links-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.quick-links-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.quick-links-list a {
+  display: inline-block;
+  padding: 4px 10px;
+  background-color: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.quick-links-list a:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+/* Footer */
+.popup-footer {
+  text-align: center;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-color);
+}
+
+.credit-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 12px;
+  transition: color 0.2s;
+}
+
+.credit-link:hover {
+  color: var(--accent-color);
+}

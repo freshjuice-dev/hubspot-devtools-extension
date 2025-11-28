@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HubSpot DevTools - Settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="options-container">
+    <header class="options-header">
+      <div class="header-brand">
+        <img src="../assets/icons/icon-128.png" alt="FreshJuice" class="header-logo">
+        <div class="header-titles">
+          <span class="header-brand-name">FreshJuice</span>
+          <span class="header-app-name">HubSpot DevTools</span>
+        </div>
+      </div>
+      <p class="subtitle">Configure your development tools preferences</p>
+    </header>
+
+    <main class="options-content">
+      <!-- General Settings -->
+      <section class="settings-section">
+        <h2>General Settings</h2>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <label for="autoApplyToLinks">Auto-apply to page links</label>
+            <p class="setting-description">Automatically add active parameters to all internal links on the page</p>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="autoApplyToLinks">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <label for="showBadge">Show badge indicator</label>
+            <p class="setting-description">Display the number of active modes on the extension icon</p>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="showBadge">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <label for="persistAcrossSessions">Persist across sessions</label>
+            <p class="setting-description">Remember toggle states when browser is closed</p>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="persistAcrossSessions">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </section>
+
+      <!-- Allowed Domains -->
+      <section class="settings-section">
+        <h2>Allowed Domains</h2>
+
+        <div class="setting-item vertical">
+          <div class="setting-info">
+            <label for="allowedDomains">Domains for auto-apply</label>
+            <p class="setting-description">When you enable debug modes on a page, the domain is automatically added here. Debug parameters will auto-apply on these domains. One domain per line.</p>
+          </div>
+          <textarea id="allowedDomains" placeholder="example.com&#10;mysite.hubspot.com"></textarea>
+        </div>
+      </section>
+
+      <!-- Actions -->
+      <section class="settings-section actions">
+        <button class="button primary" id="saveButton">Save Settings</button>
+        <button class="button secondary" id="resetButton">Reset to Defaults</button>
+      </section>
+
+      <!-- Status Message -->
+      <div class="status-message" id="statusMessage"></div>
+    </main>
+
+    <!-- Pre-footer -->
+    <div class="prefooter">
+      <a href="https://freshjuice.dev" target="_blank" class="prefooter-logo">
+        <img src="../assets/icons/icon-128.png" alt="FreshJuice" width="64" height="64">
+      </a>
+      <p class="prefooter-tagline">
+        FreshJuice — blending HubSpot modules<br>
+        &amp; themes with flavor since 2019
+      </p>
+    </div>
+
+    <footer class="options-footer">
+      <p id="footerTagline"></p>
+      <p>
+        <a href="https://github.com/freshjuice-dev/hubspot-devtools-extension" target="_blank">Source Code</a>
+        ·
+        <a href="https://github.com/freshjuice-dev/hubspot-devtools-extension/blob/main/PRIVACY.md" target="_blank">Privacy Policy</a>
+      </p>
+    </footer>
+  </div>
+
+  <script src="../lib/browser-api.js"></script>
+  <script src="../lib/storage.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>
