@@ -2,6 +2,11 @@
 
 A browser extension for HubSpot CMS developers with quick access to debug parameters and HubL documentation.
 
+[![Version](https://img.shields.io/badge/version-1.0.0-blue?style=flat-square)](https://github.com/freshjuice-dev/hubspot-devtools-extension/releases)
+[![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)](LICENSE)
+[![Chrome Web Store](https://img.shields.io/badge/Chrome-Install-4285F4?style=flat-square&logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/jmlcckldioeofjchfaomgaimhpnlfgok)
+[![Firefox Add-ons](https://img.shields.io/badge/Firefox-Install-FF7139?style=flat-square&logo=firefox&logoColor=white)](https://addons.mozilla.org/en-US/firefox/addon/freshjuice-hubspot-devtools/)
+
 **[Learn more at freshjuice.dev/hubspot-devtools](https://freshjuice.dev/hubspot-devtools/)**
 
 ## Features
@@ -39,7 +44,17 @@ A browser extension for HubSpot CMS developers with quick access to debug parame
 
 ## Installation
 
-### Chrome
+### Install from Store (Recommended)
+
+| Browser | Link |
+|---------|------|
+| Chrome | [![Chrome Web Store](https://img.shields.io/badge/Chrome_Web_Store-Install-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/jmlcckldioeofjchfaomgaimhpnlfgok) |
+| Firefox | [![Firefox Add-ons](https://img.shields.io/badge/Firefox_Add--ons-Install-FF7139?style=for-the-badge&logo=firefox&logoColor=white)](https://addons.mozilla.org/en-US/firefox/addon/freshjuice-hubspot-devtools/) |
+
+<details>
+<summary><strong>Manual Installation</strong></summary>
+
+#### Chrome
 
 1. Download the latest release from [Releases](https://github.com/freshjuice-dev/hubspot-devtools-extension/releases)
 2. Unzip `hubspot-devtools-chrome-*.zip`
@@ -47,12 +62,14 @@ A browser extension for HubSpot CMS developers with quick access to debug parame
 4. Enable "Developer mode"
 5. Click "Load unpacked" and select the unzipped folder
 
-### Firefox
+#### Firefox
 
 1. Download the latest release from [Releases](https://github.com/freshjuice-dev/hubspot-devtools-extension/releases)
 2. Open `about:addons`
 3. Click the gear icon and select "Install Add-on From File..."
 4. Select `hubspot-devtools-firefox-*.zip`
+
+</details>
 
 ## Development
 
