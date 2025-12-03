@@ -249,6 +249,41 @@ body {
   opacity: 0.6;
 }
 
+/* Enable/Disable Website Buttons */
+.enable-button,
+.forget-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 6px 12px;
+  margin-top: 4px;
+  margin-bottom: 8px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.enable-button:hover,
+.forget-button:hover {
+  background-color: var(--card-bg);
+  color: var(--text-secondary);
+}
+
+.enable-button svg,
+.forget-button svg {
+  flex-shrink: 0;
+}
+
+.enable-button:hover {
+  color: var(--toggle-on);
+}
+
 /* Quick Links */
 .quick-links {
   padding: 10px;
