@@ -113,27 +113,38 @@ async function maybeApplySavedModes(tabId, urlString, state) {
   try {
     const url = new URL(urlString);
 
-    // Check which params are missing from the URL
-    const missingParams = {};
+    // Check which params need to be added or updated
+    const paramsToSet = {};
+    let needsUpdate = false;
+
     activeModes.forEach(([mode]) => {
       const paramKey = URL_PARAM_KEYS[mode];
-      if (paramKey && !url.searchParams.has(paramKey)) {
-        // Generate value for the param
-        if (mode === 'cacheBuster') {
-          missingParams[paramKey] = Date.now().toString();
-        } else {
-          missingParams[paramKey] = 'true';
+      if (!paramKey) return;
+
+      if (mode === 'cacheBuster') {
+        // Always update cacheBuster with fresh timestamp on each navigation
+        const newTimestamp = Date.now().toString();
+        const currentValue = url.searchParams.get(paramKey);
+        if (currentValue !== newTimestamp) {
+          paramsToSet[paramKey] = newTimestamp;
+          needsUpdate = true;
+        }
+      } else {
+        // For other params, only add if missing
+        if (!url.searchParams.has(paramKey)) {
+          paramsToSet[paramKey] = 'true';
+          needsUpdate = true;
         }
       }
     });
 
-    // If all params are already present, no need to redirect
-    if (Object.keys(missingParams).length === 0) {
+    // If no updates needed, skip redirect
+    if (!needsUpdate) {
       return;
     }
 
-    // Add missing params to URL
-    Object.entries(missingParams).forEach(([key, value]) => {
+    // Update params in URL
+    Object.entries(paramsToSet).forEach(([key, value]) => {
       url.searchParams.set(key, value);
     });
 
