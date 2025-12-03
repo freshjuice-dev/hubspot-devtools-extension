@@ -162,11 +162,25 @@ async function handleToggleChange(mode, checked) {
     await addToAllowedDomains(current.domain);
   }
 
+  // Save mode states to storage for persistence
+  await saveModeStates();
+
   // Notify background script for badge update
   notifyBackgroundScript();
 
   // Apply changes to current page
   await applyToPage(current.tab);
+}
+
+/**
+ * Save current toggle states to storage
+ */
+async function saveModeStates() {
+  const modes = {};
+  Object.entries(toggles).forEach(([mode, element]) => {
+    modes[mode] = element.checked;
+  });
+  await updateState('modes', modes);
 }
 
 /**

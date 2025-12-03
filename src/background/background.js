@@ -46,29 +46,106 @@ browserAPI.tabs.onActivated.addListener(() => {
 });
 
 /**
- * Update badge when tab URL changes and inject content script if needed
+ * Update badge when tab URL changes
  */
 browserAPI.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-  if (changeInfo.status === 'complete' && tab.url && tab.url.startsWith('http')) {
-    updateBadgeForActiveTab();
-
-    // Inject content script if domain is allowed
-    try {
-      const result = await browserAPI.storage.sync.get('state');
-      const state = result.state || DEFAULT_STATE;
-      const allowedDomains = state.domains.allowedDomains || [];
-
-      const url = new URL(tab.url);
-      if (isDomainAllowed(url.hostname, allowedDomains)) {
-        await injectContentScript(tabId);
-      }
-    } catch (e) {
-      // Ignore errors
-    }
-  } else if (changeInfo.url) {
+  if (changeInfo.status === 'complete' || changeInfo.url) {
     updateBadgeForActiveTab();
   }
 });
+
+/**
+ * Handle navigation completion - apply persisted params if needed
+ */
+browserAPI.webNavigation.onCompleted.addListener(async (details) => {
+  // Only handle main frame navigations
+  if (details.frameId !== 0) return;
+
+  const tabId = details.tabId;
+  const url = details.url;
+
+  // Skip non-http URLs
+  if (!url || !url.startsWith('http')) return;
+
+  // Check if this tab was being redirected - if so, clear the flag and skip
+  if (redirectingTabs.has(tabId)) {
+    redirectingTabs.delete(tabId);
+    return;
+  }
+
+  try {
+    const result = await browserAPI.storage.sync.get('state');
+    const state = result.state || DEFAULT_STATE;
+    const allowedDomains = state.domains.allowedDomains || [];
+
+    const urlObj = new URL(url);
+    const domainAllowed = isDomainAllowed(urlObj.hostname, allowedDomains);
+
+    if (domainAllowed) {
+      // Auto-apply saved modes if persistAcrossSessions is enabled
+      if (state.settings.persistAcrossSessions) {
+        await maybeApplySavedModes(tabId, url, state);
+      }
+
+      // Inject content script
+      await injectContentScript(tabId);
+    }
+  } catch (e) {
+    // Ignore errors
+  }
+});
+
+/**
+ * Check if saved modes should be applied and redirect if needed
+ * @param {number} tabId - Tab ID
+ * @param {string} urlString - Current URL
+ * @param {Object} state - Current state
+ */
+async function maybeApplySavedModes(tabId, urlString, state) {
+  const modes = state.modes || {};
+
+  // Check if any modes are active
+  const activeModes = Object.entries(modes).filter(([_, isActive]) => isActive);
+  if (activeModes.length === 0) {
+    return;
+  }
+
+  try {
+    const url = new URL(urlString);
+
+    // Check which params are missing from the URL
+    const missingParams = {};
+    activeModes.forEach(([mode]) => {
+      const paramKey = URL_PARAM_KEYS[mode];
+      if (paramKey && !url.searchParams.has(paramKey)) {
+        // Generate value for the param
+        if (mode === 'cacheBuster') {
+          missingParams[paramKey] = Date.now().toString();
+        } else {
+          missingParams[paramKey] = 'true';
+        }
+      }
+    });
+
+    // If all params are already present, no need to redirect
+    if (Object.keys(missingParams).length === 0) {
+      return;
+    }
+
+    // Add missing params to URL
+    Object.entries(missingParams).forEach(([key, value]) => {
+      url.searchParams.set(key, value);
+    });
+
+    // Mark this tab as redirecting to prevent loops
+    redirectingTabs.add(tabId);
+
+    // Redirect to the new URL
+    await browserAPI.tabs.update(tabId, { url: url.toString() });
+  } catch (e) {
+    console.error('Failed to apply saved modes:', e);
+  }
+}
 
 /**
  * Check if domain is in allowed list
@@ -93,6 +170,9 @@ const URL_PARAM_KEYS = {
   cacheBuster: 'hsCacheBuster',
   developerMode: 'developerMode'
 };
+
+// Track tabs being redirected to prevent loops
+const redirectingTabs = new Set();
 
 /**
  * Count active params in URL

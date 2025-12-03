@@ -33,6 +33,7 @@
     "storage",
     "tabs",
     "activeTab",
+    "webNavigation",
     "<all_urls>"
   ],
   "content_scripts": [
