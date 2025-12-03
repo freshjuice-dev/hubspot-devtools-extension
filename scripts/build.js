@@ -31,30 +31,14 @@ async function build(target) {
   // Clean and create dist directory
   await fs.emptyDir(distDir);
 
-  // Copy common source files
-  const filesToCopy = ['popup', 'options', 'content', 'lib', 'assets'];
+  // Copy common source files (including unified background script)
+  const filesToCopy = ['popup', 'options', 'content', 'lib', 'assets', 'background'];
 
   for (const dir of filesToCopy) {
     const srcPath = path.join(SRC_DIR, dir);
     if (await fs.pathExists(srcPath)) {
       await fs.copy(srcPath, path.join(distDir, dir));
     }
-  }
-
-  // Copy appropriate background script
-  const bgDir = path.join(distDir, 'background');
-  await fs.ensureDir(bgDir);
-
-  if (target === 'chrome') {
-    await fs.copy(
-      path.join(SRC_DIR, 'background', 'service-worker.js'),
-      path.join(bgDir, 'service-worker.js')
-    );
-  } else {
-    await fs.copy(
-      path.join(SRC_DIR, 'background', 'background.js'),
-      path.join(bgDir, 'background.js')
-    );
   }
 
   // Merge manifests

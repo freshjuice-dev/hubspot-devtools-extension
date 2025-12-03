@@ -26,7 +26,7 @@
     }
   },
   "background": {
-    "scripts": ["lib/browser-api.js", "background/background.js"],
+    "scripts": ["background/background.js"],
     "persistent": false
   },
   "permissions": [
