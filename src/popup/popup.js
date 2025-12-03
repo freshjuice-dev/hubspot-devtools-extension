@@ -108,7 +108,7 @@ function urlHasDebugParams(urlString) {
 }
 
 /**
- * Update enable/disable button visibility
+ * Update enable/disable button visibility and toggle styles
  * @param {string} domain - Current domain
  * @param {string} urlString - Current URL
  */
@@ -117,6 +117,12 @@ async function updateWebsiteButtons(domain, urlString) {
   const allowedDomains = state.domains.allowedDomains || [];
   const isAllowed = allowedDomains.includes(domain);
   const hasDebugParams = urlHasDebugParams(urlString);
+
+  // Update toggle card styles based on managed/unmanaged state
+  const toggleCards = document.querySelectorAll('.toggle-card');
+  toggleCards.forEach(card => {
+    card.classList.toggle('unmanaged', !isAllowed);
+  });
 
   if (isAllowed) {
     // Domain is whitelisted - show disable button
@@ -299,6 +305,11 @@ async function enableWebsite(domain) {
   // Update buttons
   enableButton.style.display = 'none';
   forgetButton.style.display = 'flex';
+
+  // Remove unmanaged class from toggle cards (they're now managed)
+  document.querySelectorAll('.toggle-card').forEach(card => {
+    card.classList.remove('unmanaged');
+  });
 }
 
 /**
