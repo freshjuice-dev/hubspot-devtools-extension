@@ -30,11 +30,165 @@ const DEFAULT_STATE = {
 };
 
 /**
- * Initialize default state on install
+ * Initialize default state on install and create context menus
  */
 browserAPI.runtime.onInstalled.addListener(async (details) => {
   if (details.reason === 'install') {
     await browserAPI.storage.sync.set({ state: DEFAULT_STATE });
+  }
+
+  // Create context menus
+  createContextMenus();
+});
+
+/**
+ * Create context menu items
+ */
+function createContextMenus() {
+  // Remove existing menus first
+  browserAPI.contextMenus.removeAll();
+
+  // Parent menu for page
+  browserAPI.contextMenus.create({
+    id: 'hsdevtools-page-parent',
+    title: 'FreshJuice HubSpot DevTools',
+    contexts: ['page']
+  });
+
+  // Page submenu items
+  browserAPI.contextMenus.create({
+    id: 'hsdevtools-page-debug',
+    parentId: 'hsdevtools-page-parent',
+    title: 'Add Debug Mode',
+    contexts: ['page']
+  });
+
+  browserAPI.contextMenus.create({
+    id: 'hsdevtools-page-cache',
+    parentId: 'hsdevtools-page-parent',
+    title: 'Add Cache Buster',
+    contexts: ['page']
+  });
+
+  browserAPI.contextMenus.create({
+    id: 'hsdevtools-page-dev',
+    parentId: 'hsdevtools-page-parent',
+    title: 'Add Developer Mode',
+    contexts: ['page']
+  });
+
+  browserAPI.contextMenus.create({
+    id: 'hsdevtools-page-separator',
+    parentId: 'hsdevtools-page-parent',
+    type: 'separator',
+    contexts: ['page']
+  });
+
+  browserAPI.contextMenus.create({
+    id: 'hsdevtools-page-all',
+    parentId: 'hsdevtools-page-parent',
+    title: 'Add All Params',
+    contexts: ['page']
+  });
+}
+
+/**
+ * Update context menu titles based on current URL params
+ * @param {string} url - Current page URL
+ */
+function updateContextMenuTitles(url) {
+  if (!url || !url.startsWith('http')) return;
+
+  try {
+    const urlObj = new URL(url);
+    const hasDebug = urlObj.searchParams.has('hsDebug');
+    const hasCache = urlObj.searchParams.has('hsCacheBuster');
+    const hasDev = urlObj.searchParams.has('developerMode');
+    const hasAll = hasDebug && hasCache && hasDev;
+
+    browserAPI.contextMenus.update('hsdevtools-page-debug', {
+      title: hasDebug ? 'Remove Debug Mode' : 'Add Debug Mode'
+    });
+
+    browserAPI.contextMenus.update('hsdevtools-page-cache', {
+      title: hasCache ? 'Remove Cache Buster' : 'Add Cache Buster'
+    });
+
+    browserAPI.contextMenus.update('hsdevtools-page-dev', {
+      title: hasDev ? 'Remove Developer Mode' : 'Add Developer Mode'
+    });
+
+    browserAPI.contextMenus.update('hsdevtools-page-all', {
+      title: hasAll ? 'Remove All Params' : 'Add All Params'
+    });
+  } catch (e) {
+    // Invalid URL, ignore
+  }
+}
+
+/**
+ * Handle context menu clicks
+ */
+browserAPI.contextMenus.onClicked.addListener(async (info, tab) => {
+  const menuId = info.menuItemId;
+  let url = null;
+  let isNewTab = false;
+
+  // Determine URL and whether to open in new tab
+  if (menuId.startsWith('hsdevtools-link-')) {
+    url = info.linkUrl;
+    isNewTab = true;
+  } else if (menuId.startsWith('hsdevtools-page-')) {
+    url = info.pageUrl || tab.url;
+    isNewTab = false;
+  }
+
+  if (!url || !url.startsWith('http')) return;
+
+  // Determine which params to toggle
+  let paramsToToggle = [];
+  if (menuId.includes('-debug')) {
+    paramsToToggle = ['hsDebug'];
+  } else if (menuId.includes('-cache')) {
+    paramsToToggle = ['hsCacheBuster'];
+  } else if (menuId.includes('-dev')) {
+    paramsToToggle = ['developerMode'];
+  } else if (menuId.includes('-all')) {
+    paramsToToggle = ['hsDebug', 'hsCacheBuster', 'developerMode'];
+  }
+
+  // Build new URL with toggled params
+  try {
+    const urlObj = new URL(url);
+    let isAddingParams = false;
+
+    paramsToToggle.forEach(param => {
+      if (urlObj.searchParams.has(param)) {
+        // Remove if exists
+        urlObj.searchParams.delete(param);
+      } else {
+        // Add if doesn't exist
+        isAddingParams = true;
+        if (param === 'hsCacheBuster') {
+          urlObj.searchParams.set(param, Date.now().toString());
+        } else {
+          urlObj.searchParams.set(param, 'true');
+        }
+      }
+    });
+
+    // If adding params, also whitelist the domain
+    if (isAddingParams) {
+      await addDomainToAllowedList(urlObj.hostname);
+    }
+
+    if (isNewTab) {
+      browserAPI.tabs.create({ url: urlObj.toString() });
+    } else {
+      browserAPI.tabs.update(tab.id, { url: urlObj.toString() });
+    }
+  } catch (e) {
+    console.error('Failed to toggle debug params:', e);
   }
 });
 
@@ -48,18 +202,31 @@ browserAPI.storage.onChanged.addListener((changes, area) => {
 });
 
 /**
- * Update badge when active tab changes
+ * Update badge and context menus when active tab changes
  */
-browserAPI.tabs.onActivated.addListener(() => {
+browserAPI.tabs.onActivated.addListener(async () => {
   updateBadgeForActiveTab();
+  // Update context menu titles for the new active tab
+  try {
+    const [tab] = await browserAPI.tabs.query({ active: true, currentWindow: true });
+    if (tab && tab.url) {
+      updateContextMenuTitles(tab.url);
+    }
+  } catch (e) {
+    // Ignore errors
+  }
 });
 
 /**
- * Update badge when tab URL changes
+ * Update badge and context menus when tab URL changes
  */
 browserAPI.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   if (changeInfo.status === 'complete' || changeInfo.url) {
     updateBadgeForActiveTab();
+    // Update context menu titles if this is the active tab
+    if (tab.active && tab.url) {
+      updateContextMenuTitles(tab.url);
+    }
   }
 });
 
@@ -174,6 +341,25 @@ async function maybeApplySavedModes(tabId, urlString, state) {
     await browserAPI.tabs.update(tabId, { url: url.toString() });
   } catch (e) {
     console.error('Failed to apply saved modes:', e);
+  }
+}
+
+/**
+ * Add domain to allowed list if not already present
+ * @param {string} hostname - Domain to add
+ */
+async function addDomainToAllowedList(hostname) {
+  if (!hostname) return;
+
+  const domain = hostname.toLowerCase();
+  const result = await browserAPI.storage.sync.get('state');
+  const state = result.state || DEFAULT_STATE;
+  const allowedDomains = state.domains.allowedDomains || [];
+
+  if (!allowedDomains.includes(domain)) {
+    allowedDomains.push(domain);
+    state.domains.allowedDomains = allowedDomains;
+    await browserAPI.storage.sync.set({ state });
   }
 }
 

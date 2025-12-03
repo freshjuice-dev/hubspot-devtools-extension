@@ -34,6 +34,7 @@
     "tabs",
     "activeTab",
     "webNavigation",
+    "contextMenus",
     "<all_urls>"
   ],
   "content_scripts": [
