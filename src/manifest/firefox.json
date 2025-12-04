@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "FreshJuice HubSpot DevTools",
   "description": "Quick access to HubSpot debug parameters and HubL documentation for CMS developers",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "developer": {
     "name": "FreshJuice",
     "url": "https://freshjuice.dev"
@@ -26,13 +26,15 @@
     }
   },
   "background": {
-    "scripts": ["lib/browser-api.js", "background/background.js"],
+    "scripts": ["background/background.js"],
     "persistent": false
   },
   "permissions": [
     "storage",
     "tabs",
     "activeTab",
+    "webNavigation",
+    "contextMenus",
     "<all_urls>"
   ],
   "content_scripts": [

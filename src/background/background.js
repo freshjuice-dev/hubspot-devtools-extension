@@ -1,7 +1,16 @@
 /**
- * Background script for Firefox (Manifest V2)
+ * Unified Background Script for Chrome (MV3) and Firefox (MV2)
  * Handles background tasks, badge updates, and messaging
  */
+
+// Detect browser API (works in both service worker and background script context)
+const browserAPI = (typeof browser !== 'undefined' && browser.runtime) ? browser : chrome;
+
+// Detect if we're running MV3 (Chrome) or MV2 (Firefox)
+const isManifestV3 = browserAPI.runtime.getManifest().manifest_version === 3;
+
+// Badge API differs between MV2 and MV3
+const badgeAPI = isManifestV3 ? browserAPI.action : browserAPI.browserAction;
 
 // Default state
 const DEFAULT_STATE = {
@@ -21,11 +30,165 @@ const DEFAULT_STATE = {
 };
 
 /**
- * Initialize default state on install
+ * Initialize default state on install and create context menus
  */
 browserAPI.runtime.onInstalled.addListener(async (details) => {
   if (details.reason === 'install') {
     await browserAPI.storage.sync.set({ state: DEFAULT_STATE });
+  }
+
+  // Create context menus
+  createContextMenus();
+});
+
+/**
+ * Create context menu items
+ */
+function createContextMenus() {
+  // Remove existing menus first
+  browserAPI.contextMenus.removeAll();
+
+  // Parent menu for page
+  browserAPI.contextMenus.create({
+    id: 'hsdevtools-page-parent',
+    title: 'FreshJuice HubSpot DevTools',
+    contexts: ['page']
+  });
+
+  // Page submenu items
+  browserAPI.contextMenus.create({
+    id: 'hsdevtools-page-debug',
+    parentId: 'hsdevtools-page-parent',
+    title: 'Add Debug Mode',
+    contexts: ['page']
+  });
+
+  browserAPI.contextMenus.create({
+    id: 'hsdevtools-page-cache',
+    parentId: 'hsdevtools-page-parent',
+    title: 'Add Cache Buster',
+    contexts: ['page']
+  });
+
+  browserAPI.contextMenus.create({
+    id: 'hsdevtools-page-dev',
+    parentId: 'hsdevtools-page-parent',
+    title: 'Add Developer Mode',
+    contexts: ['page']
+  });
+
+  browserAPI.contextMenus.create({
+    id: 'hsdevtools-page-separator',
+    parentId: 'hsdevtools-page-parent',
+    type: 'separator',
+    contexts: ['page']
+  });
+
+  browserAPI.contextMenus.create({
+    id: 'hsdevtools-page-all',
+    parentId: 'hsdevtools-page-parent',
+    title: 'Add All Params',
+    contexts: ['page']
+  });
+}
+
+/**
+ * Update context menu titles based on current URL params
+ * @param {string} url - Current page URL
+ */
+function updateContextMenuTitles(url) {
+  if (!url || !url.startsWith('http')) return;
+
+  try {
+    const urlObj = new URL(url);
+    const hasDebug = urlObj.searchParams.has('hsDebug');
+    const hasCache = urlObj.searchParams.has('hsCacheBuster');
+    const hasDev = urlObj.searchParams.has('developerMode');
+    const hasAll = hasDebug && hasCache && hasDev;
+
+    browserAPI.contextMenus.update('hsdevtools-page-debug', {
+      title: hasDebug ? 'Remove Debug Mode' : 'Add Debug Mode'
+    });
+
+    browserAPI.contextMenus.update('hsdevtools-page-cache', {
+      title: hasCache ? 'Remove Cache Buster' : 'Add Cache Buster'
+    });
+
+    browserAPI.contextMenus.update('hsdevtools-page-dev', {
+      title: hasDev ? 'Remove Developer Mode' : 'Add Developer Mode'
+    });
+
+    browserAPI.contextMenus.update('hsdevtools-page-all', {
+      title: hasAll ? 'Remove All Params' : 'Add All Params'
+    });
+  } catch (e) {
+    // Invalid URL, ignore
+  }
+}
+
+/**
+ * Handle context menu clicks
+ */
+browserAPI.contextMenus.onClicked.addListener(async (info, tab) => {
+  const menuId = info.menuItemId;
+  let url = null;
+  let isNewTab = false;
+
+  // Determine URL and whether to open in new tab
+  if (menuId.startsWith('hsdevtools-link-')) {
+    url = info.linkUrl;
+    isNewTab = true;
+  } else if (menuId.startsWith('hsdevtools-page-')) {
+    url = info.pageUrl || tab.url;
+    isNewTab = false;
+  }
+
+  if (!url || !url.startsWith('http')) return;
+
+  // Determine which params to toggle
+  let paramsToToggle = [];
+  if (menuId.includes('-debug')) {
+    paramsToToggle = ['hsDebug'];
+  } else if (menuId.includes('-cache')) {
+    paramsToToggle = ['hsCacheBuster'];
+  } else if (menuId.includes('-dev')) {
+    paramsToToggle = ['developerMode'];
+  } else if (menuId.includes('-all')) {
+    paramsToToggle = ['hsDebug', 'hsCacheBuster', 'developerMode'];
+  }
+
+  // Build new URL with toggled params
+  try {
+    const urlObj = new URL(url);
+    let isAddingParams = false;
+
+    paramsToToggle.forEach(param => {
+      if (urlObj.searchParams.has(param)) {
+        // Remove if exists
+        urlObj.searchParams.delete(param);
+      } else {
+        // Add if doesn't exist
+        isAddingParams = true;
+        if (param === 'hsCacheBuster') {
+          urlObj.searchParams.set(param, Date.now().toString());
+        } else {
+          urlObj.searchParams.set(param, 'true');
+        }
+      }
+    });
+
+    // If adding params, also whitelist the domain
+    if (isAddingParams) {
+      await addDomainToAllowedList(urlObj.hostname);
+    }
+
+    if (isNewTab) {
+      browserAPI.tabs.create({ url: urlObj.toString() });
+    } else {
+      browserAPI.tabs.update(tab.id, { url: urlObj.toString() });
+    }
+  } catch (e) {
+    console.error('Failed to toggle debug params:', e);
   }
 });
 
@@ -39,36 +202,166 @@ browserAPI.storage.onChanged.addListener((changes, area) => {
 });
 
 /**
- * Update badge when active tab changes
+ * Update badge and context menus when active tab changes
  */
-browserAPI.tabs.onActivated.addListener(() => {
+browserAPI.tabs.onActivated.addListener(async () => {
   updateBadgeForActiveTab();
+  // Update context menu titles for the new active tab
+  try {
+    const [tab] = await browserAPI.tabs.query({ active: true, currentWindow: true });
+    if (tab && tab.url) {
+      updateContextMenuTitles(tab.url);
+    }
+  } catch (e) {
+    // Ignore errors
+  }
 });
 
 /**
- * Update badge when tab URL changes and inject content script if needed
+ * Update badge and context menus when tab URL changes
  */
 browserAPI.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-  if (changeInfo.status === 'complete' && tab.url && tab.url.startsWith('http')) {
+  if (changeInfo.status === 'complete' || changeInfo.url) {
     updateBadgeForActiveTab();
-
-    // Inject content script if domain is allowed
-    try {
-      const result = await browserAPI.storage.sync.get('state');
-      const state = result.state || DEFAULT_STATE;
-      const allowedDomains = state.domains.allowedDomains || [];
-
-      const url = new URL(tab.url);
-      if (isDomainAllowed(url.hostname, allowedDomains)) {
-        await injectContentScript(tabId);
-      }
-    } catch (e) {
-      // Ignore errors
+    // Update context menu titles if this is the active tab
+    if (tab.active && tab.url) {
+      updateContextMenuTitles(tab.url);
     }
-  } else if (changeInfo.url) {
-    updateBadgeForActiveTab();
   }
 });
+
+// URL param keys to check
+const URL_PARAM_KEYS = {
+  hsDebug: 'hsDebug',
+  cacheBuster: 'hsCacheBuster',
+  developerMode: 'developerMode'
+};
+
+// Track tabs being redirected to prevent loops
+const redirectingTabs = new Set();
+
+/**
+ * Handle navigation completion - apply persisted params if needed
+ */
+browserAPI.webNavigation.onCompleted.addListener(async (details) => {
+  // Only handle main frame navigations
+  if (details.frameId !== 0) return;
+
+  const tabId = details.tabId;
+  const url = details.url;
+
+  // Skip non-http URLs
+  if (!url || !url.startsWith('http')) return;
+
+  // Check if this tab was being redirected - if so, clear the flag and skip
+  if (redirectingTabs.has(tabId)) {
+    redirectingTabs.delete(tabId);
+    return;
+  }
+
+  try {
+    const result = await browserAPI.storage.sync.get('state');
+    const state = result.state || DEFAULT_STATE;
+    const allowedDomains = state.domains.allowedDomains || [];
+
+    const urlObj = new URL(url);
+    const domainAllowed = isDomainAllowed(urlObj.hostname, allowedDomains);
+
+    if (domainAllowed) {
+      // Auto-apply saved modes if persistAcrossSessions is enabled
+      if (state.settings.persistAcrossSessions) {
+        await maybeApplySavedModes(tabId, url, state);
+      }
+
+      // Inject content script
+      await injectContentScript(tabId);
+    }
+  } catch (e) {
+    // Ignore errors
+  }
+});
+
+/**
+ * Check if saved modes should be applied and redirect if needed
+ * @param {number} tabId - Tab ID
+ * @param {string} urlString - Current URL
+ * @param {Object} state - Current state
+ */
+async function maybeApplySavedModes(tabId, urlString, state) {
+  const modes = state.modes || {};
+
+  // Check if any modes are active
+  const activeModes = Object.entries(modes).filter(([_, isActive]) => isActive);
+  if (activeModes.length === 0) {
+    return;
+  }
+
+  try {
+    const url = new URL(urlString);
+
+    // Check which params need to be added or updated
+    const paramsToSet = {};
+    let needsUpdate = false;
+
+    activeModes.forEach(([mode]) => {
+      const paramKey = URL_PARAM_KEYS[mode];
+      if (!paramKey) return;
+
+      if (mode === 'cacheBuster') {
+        // Always update cacheBuster with fresh timestamp on each navigation
+        const newTimestamp = Date.now().toString();
+        const currentValue = url.searchParams.get(paramKey);
+        if (currentValue !== newTimestamp) {
+          paramsToSet[paramKey] = newTimestamp;
+          needsUpdate = true;
+        }
+      } else {
+        // For other params, only add if missing
+        if (!url.searchParams.has(paramKey)) {
+          paramsToSet[paramKey] = 'true';
+          needsUpdate = true;
+        }
+      }
+    });
+
+    // If no updates needed, skip redirect
+    if (!needsUpdate) {
+      return;
+    }
+
+    // Update params in URL
+    Object.entries(paramsToSet).forEach(([key, value]) => {
+      url.searchParams.set(key, value);
+    });
+
+    // Mark this tab as redirecting to prevent loops
+    redirectingTabs.add(tabId);
+
+    // Redirect to the new URL
+    await browserAPI.tabs.update(tabId, { url: url.toString() });
+  } catch (e) {
+    console.error('Failed to apply saved modes:', e);
+  }
+}
+
+/**
+ * Add domain to allowed list if not already present
+ * @param {string} hostname - Domain to add
+ */
+async function addDomainToAllowedList(hostname) {
+  if (!hostname) return;
+
+  const domain = hostname.toLowerCase();
+  const result = await browserAPI.storage.sync.get('state');
+  const state = result.state || DEFAULT_STATE;
+  const allowedDomains = state.domains.allowedDomains || [];
+
+  if (!allowedDomains.includes(domain)) {
+    allowedDomains.push(domain);
+    state.domains.allowedDomains = allowedDomains;
+    await browserAPI.storage.sync.set({ state });
+  }
+}
 
 /**
  * Check if domain is in allowed list
@@ -86,13 +379,6 @@ function isDomainAllowed(hostname, allowedDomains) {
     domain === allowed || domain.endsWith('.' + allowed)
   );
 }
-
-// URL param keys to check
-const URL_PARAM_KEYS = {
-  hsDebug: 'hsDebug',
-  cacheBuster: 'hsCacheBuster',
-  developerMode: 'developerMode'
-};
 
 /**
  * Count active params in URL
@@ -127,7 +413,7 @@ async function updateBadgeForActiveTab() {
 
     // Check if badge should be shown at all
     if (!state.settings.showBadge) {
-      await browserAPI.browserAction.setBadgeText({ text: '' });
+      await badgeAPI.setBadgeText({ text: '' });
       return;
     }
 
@@ -152,12 +438,12 @@ async function updateBadgeForActiveTab() {
 
     // Only show badge if domain is allowed and has active params
     if (!isAllowed || activeCount === 0) {
-      await browserAPI.browserAction.setBadgeText({ text: '' });
+      await badgeAPI.setBadgeText({ text: '' });
       return;
     }
 
-    await browserAPI.browserAction.setBadgeText({ text: activeCount.toString() });
-    await browserAPI.browserAction.setBadgeBackgroundColor({ color: '#16a34a' });
+    await badgeAPI.setBadgeText({ text: activeCount.toString() });
+    await badgeAPI.setBadgeBackgroundColor({ color: '#16a34a' });
   } catch (error) {
     console.error('Failed to update badge:', error);
   }
@@ -228,15 +514,24 @@ async function applyParamsToTab(tabId, params) {
 }
 
 /**
- * Inject content script into a tab (Firefox MV2)
+ * Inject content script into a tab
+ * Uses different APIs for MV2 vs MV3
  * @param {number} tabId - Tab ID to inject into
  */
 async function injectContentScript(tabId) {
   try {
-    // Firefox MV2 uses tabs.executeScript
-    await browserAPI.tabs.executeScript(tabId, { file: 'lib/browser-api.js' });
-    await browserAPI.tabs.executeScript(tabId, { file: 'lib/url-params.js' });
-    await browserAPI.tabs.executeScript(tabId, { file: 'content/content-script.js' });
+    if (isManifestV3) {
+      // Chrome MV3 uses scripting API
+      await browserAPI.scripting.executeScript({
+        target: { tabId },
+        files: ['lib/browser-api.js', 'lib/url-params.js', 'content/content-script.js']
+      });
+    } else {
+      // Firefox MV2 uses tabs.executeScript
+      await browserAPI.tabs.executeScript(tabId, { file: 'lib/browser-api.js' });
+      await browserAPI.tabs.executeScript(tabId, { file: 'lib/url-params.js' });
+      await browserAPI.tabs.executeScript(tabId, { file: 'content/content-script.js' });
+    }
   } catch (error) {
     console.error('Failed to inject content script:', error);
   }

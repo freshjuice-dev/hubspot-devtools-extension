@@ -20,6 +20,7 @@
   /* Interactive Colors */
   --toggle-on: #16a34a;          /* green-600 */
   --toggle-off: #d1d5db;         /* gray-300 */
+  --toggle-unmanaged: #d97706;   /* amber-600 */
 
   /* Effects */
   --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -206,6 +207,11 @@ body {
   background-color: var(--toggle-on);
 }
 
+/* Unmanaged state - amber color for params active but domain not in allowed list */
+.toggle-card.unmanaged .toggle-switch input:checked + .toggle-slider {
+  background-color: var(--toggle-unmanaged);
+}
+
 .toggle-switch input:checked + .toggle-slider::before {
   transform: translateX(20px);
 }
@@ -247,6 +253,41 @@ body {
 
 .action-button svg {
   opacity: 0.6;
+}
+
+/* Enable/Disable Website Buttons */
+.enable-button,
+.forget-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 6px 12px;
+  margin-top: 4px;
+  margin-bottom: 8px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.enable-button:hover,
+.forget-button:hover {
+  background-color: var(--card-bg);
+  color: var(--text-secondary);
+}
+
+.enable-button svg,
+.forget-button svg {
+  flex-shrink: 0;
+}
+
+.enable-button:hover {
+  color: var(--toggle-on);
 }
 
 /* Quick Links */

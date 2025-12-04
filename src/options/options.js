@@ -34,7 +34,7 @@ async function initOptions() {
   footerTagline.appendChild(document.createTextNode(randomPrefix + ' '));
 
   const alexLink = document.createElement('a');
-  alexLink.href = 'https://alex.zappa.dev';
+  alexLink.href = 'https://alex.zappa.dev?utm_source=freshjuice-hubspot-devtools';
   alexLink.target = '_blank';
   alexLink.textContent = 'Alex Zappa';
   footerTagline.appendChild(alexLink);
@@ -42,7 +42,7 @@ async function initOptions() {
   footerTagline.appendChild(document.createTextNode(' at '));
 
   const fjLink = document.createElement('a');
-  fjLink.href = 'https://freshjuice.dev';
+  fjLink.href = 'https://freshjuice.dev?utm_source=freshjuice-hubspot-devtools';
   fjLink.target = '_blank';
   fjLink.textContent = 'FreshJuice';
   footerTagline.appendChild(fjLink);
@@ -69,6 +69,29 @@ async function initOptions() {
 function setupEventListeners() {
   saveButton.addEventListener('click', saveSettings);
   resetButton.addEventListener('click', resetSettings);
+
+  // Tab switching
+  const subtitles = {
+    settings: 'Configure your development tools preferences',
+    resources: 'Useful links for HubSpot CMS developers'
+  };
+
+  document.querySelectorAll('.tab-button').forEach(button => {
+    button.addEventListener('click', () => {
+      const tabId = button.dataset.tab;
+
+      // Update button states
+      document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+      button.classList.add('active');
+
+      // Update content visibility
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      document.getElementById(`tab-${tabId}`).classList.add('active');
+
+      // Update subtitle
+      document.getElementById('pageSubtitle').textContent = subtitles[tabId] || '';
+    });
+  });
 }
 
 /**
@@ -158,5 +181,71 @@ function showStatus(message, type) {
   }, 3000);
 }
 
+// Fun blog CTAs
+const BLOG_CTAS = [
+  'Squeeze more juice from our blog →',
+  'Thirsty for more? Visit the blog →',
+  'Get your daily dose of fresh →',
+  'More pulp at the blog →',
+  'Sip more fresh content →',
+  'Keep it fresh — visit the blog →',
+];
+
+/**
+ * Fetch and render blog posts
+ */
+async function loadBlogPosts() {
+  const container = document.getElementById('blogPosts');
+  if (!container) return;
+
+  const randomCta = BLOG_CTAS[Math.floor(Math.random() * BLOG_CTAS.length)];
+
+  try {
+    const response = await fetch('https://freshjuice.dev/feed.json');
+    if (!response.ok) throw new Error('Failed to fetch');
+
+    const feed = await response.json();
+    const posts = feed.items || [];
+
+    if (posts.length === 0) {
+      container.innerHTML = '<div class="blog-error">No posts available</div>';
+      return;
+    }
+
+    const utmParams = 'utm_source=freshjuice-hubspot-devtools';
+    const postsHtml = posts.slice(0, 5).map(post => {
+      const date = new Date(post.date_published).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+      const author = post.author?.name || 'FreshJuice';
+      const summary = post.summary || '';
+      const postUrl = post.url + (post.url.includes('?') ? '&' : '?') + utmParams;
+
+      return `
+        <a href="${postUrl}" target="_blank" class="blog-post">
+          <span class="blog-post-title">${post.title}</span>
+          <span class="blog-post-summary">${summary}</span>
+          <span class="blog-post-meta">${date} · ${author}</span>
+        </a>
+      `;
+    }).join('');
+
+    container.innerHTML = postsHtml + `
+      <a href="https://freshjuice.dev/blog/?${utmParams}" target="_blank" class="blog-view-all">
+        ${randomCta}
+      </a>
+    `;
+
+  } catch (error) {
+    console.error('Failed to load blog posts:', error);
+    container.innerHTML = '<div class="blog-error">Failed to load posts</div>';
+  }
+}
+
 // Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', initOptions);
+document.addEventListener('DOMContentLoaded', () => {
+  initOptions();
+  loadBlogPosts();
+});
