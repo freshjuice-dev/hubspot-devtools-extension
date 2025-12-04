@@ -16,10 +16,19 @@
           <span class="header-app-name">HubSpot DevTools</span>
         </div>
       </div>
-      <p class="subtitle">Configure your development tools preferences</p>
+      <p class="subtitle" id="pageSubtitle">Configure your development tools preferences</p>
     </header>
 
+    <!-- Tab Navigation -->
+    <nav class="tabs-nav">
+      <button class="tab-button active" data-tab="settings">Settings</button>
+      <button class="tab-button" data-tab="resources">Resources</button>
+    </nav>
+
     <main class="options-content">
+      <!-- Settings Tab -->
+      <div class="tab-content active" id="tab-settings">
+
       <!-- General Settings -->
       <section class="settings-section">
         <h2>General Settings</h2>
@@ -80,6 +89,102 @@
 
       <!-- Status Message -->
       <div class="status-message" id="statusMessage"></div>
+
+      </div><!-- /tab-settings -->
+
+      <!-- Resources Tab -->
+      <div class="tab-content" id="tab-resources">
+
+        <!-- HubSpot Documentation -->
+        <section class="settings-section">
+          <h2>HubSpot Documentation</h2>
+          <div class="resources-links">
+            <a href="https://developers.hubspot.com/docs/cms/start-building/introduction/overview" target="_blank">
+              <span class="resource-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"/><path d="M128,232a32,32,0,0,1,32-32h72V56H160a32,32,0,0,0-32,32Z" opacity="0.2"/><path d="M128,88a32,32,0,0,1,32-32h72V200H160a32,32,0,0,0-32,32" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M24,200H96a32,32,0,0,1,32,32V88A32,32,0,0,0,96,56H24Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="160" y1="96" x2="200" y2="96" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="160" y1="128" x2="200" y2="128" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="160" y1="160" x2="200" y2="160" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg></span>
+              <span class="resource-text">
+                <strong>CMS Developer Docs</strong>
+                <small>Official documentation</small>
+              </span>
+            </a>
+            <a href="https://community.hubspot.com/t5/HubSpot-Developer-Support/ct-p/developers" target="_blank">
+              <span class="resource-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"/><circle cx="128" cy="144" r="40" opacity="0.2"/><circle cx="64" cy="88" r="32" opacity="0.2"/><circle cx="192" cy="88" r="32" opacity="0.2"/><path d="M192,120a59.91,59.91,0,0,1,48,24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M16,144a59.91,59.91,0,0,1,48-24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><circle cx="128" cy="144" r="40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M72,216a65,65,0,0,1,112,0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M161,80a32,32,0,1,1,31,40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M64,120A32,32,0,1,1,95,80" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg></span>
+              <span class="resource-text">
+                <strong>Developer Community</strong>
+                <small>Forums and discussions</small>
+              </span>
+            </a>
+            <a href="https://developers.hubspot.com/docs/cms/reference/hubl/overview" target="_blank">
+              <span class="resource-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"/><polygon points="192 168 240 128 192 88 64 88 16 128 64 168 192 168" opacity="0.2"/><polyline points="64 88 16 128 64 168" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><polyline points="192 88 240 128 192 168" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="160" y1="40" x2="96" y2="216" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg></span>
+              <span class="resource-text">
+                <strong>HubL Reference</strong>
+                <small>HubSpot markup language guide</small>
+              </span>
+            </a>
+            <a href="https://developers.hubspot.com/docs/cms/reference/hubl/filters" target="_blank">
+              <span class="resource-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"/><path d="M34.1,61.38A8,8,0,0,1,40,48H216a8,8,0,0,1,5.92,13.38L152,136v58.65a8,8,0,0,1-3.56,6.66l-32,21.33A8,8,0,0,1,104,216V136Z" opacity="0.2"/><path d="M34.1,61.38A8,8,0,0,1,40,48H216a8,8,0,0,1,5.92,13.38L152,136v58.65a8,8,0,0,1-3.56,6.66l-32,21.33A8,8,0,0,1,104,216V136Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg></span>
+              <span class="resource-text">
+                <strong>HubL Filters</strong>
+                <small>Data transformation filters</small>
+              </span>
+            </a>
+            <a href="https://developers.hubspot.com/docs/cms/reference/hubl/functions" target="_blank">
+              <span class="resource-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"/><polygon points="160 16 144 96 208 120 96 240 112 160 48 136 160 16" opacity="0.2"/><polygon points="160 16 144 96 208 120 96 240 112 160 48 136 160 16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg></span>
+              <span class="resource-text">
+                <strong>HubL Functions</strong>
+                <small>Built-in template functions</small>
+              </span>
+            </a>
+            <a href="https://developers.hubspot.com/docs/cms/reference/hubl/variables" target="_blank">
+              <span class="resource-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"/><path d="M176,216c64,0,0-88,64-88-64,0,0-88-64-88H80c-64,0,0,88-64,88,64,0,0,88,64,88Z" opacity="0.2"/><path d="M80,40c-64,0,0,88-64,88,64,0,0,88,64,88" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M176,40c64,0,0,88,64,88-64,0,0,88-64,88" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg></span>
+              <span class="resource-text">
+                <strong>HubL Variables</strong>
+                <small>Store and reuse values</small>
+              </span>
+            </a>
+            <a href="https://developers.hubspot.com/docs/cms/reference/hubl/if-statements" target="_blank">
+              <span class="resource-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"/><polygon points="192 216 192 136 128 72 64 136 64 216 192 216" opacity="0.2"/><polyline points="96 184 64 216 32 184" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><polyline points="224 184 192 216 160 184" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><polyline points="128 24 128 72 64 136 64 216" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><polyline points="128 72 192 136 192 216" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg></span>
+              <span class="resource-text">
+                <strong>HubL If Statements</strong>
+                <small>Conditional logic in templates</small>
+              </span>
+            </a>
+            <a href="https://developers.hubspot.com/docs/cms/reference/hubl/for-loops" target="_blank">
+              <span class="resource-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"/><path d="M32,128A64,64,0,0,1,96,64H224v64a64,64,0,0,1-64,64H32Z" opacity="0.2"/><polyline points="200 88 224 64 200 40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M32,128A64,64,0,0,1,96,64H224" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><polyline points="56 168 32 192 56 216" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M224,128a64,64,0,0,1-64,64H32" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg></span>
+              <span class="resource-text">
+                <strong>HubL Loops</strong>
+                <small>Iterate over data in templates</small>
+              </span>
+            </a>
+            <a href="https://developers.hubspot.com/docs/cms/data/hubdb" target="_blank">
+              <span class="resource-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"/><ellipse cx="128" cy="80" rx="88" ry="48" opacity="0.2"/><ellipse cx="128" cy="80" rx="88" ry="48" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M40,80v48c0,26.51,39.4,48,88,48s88-21.49,88-48V80" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M40,128v48c0,26.51,39.4,48,88,48s88-21.49,88-48V128" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg></span>
+              <span class="resource-text">
+                <strong>HubDB</strong>
+                <small>Relational database for CMS</small>
+              </span>
+            </a>
+            <a href="https://developers.hubspot.com/docs/developer-tooling/local-development/hubspot-cli/reference" target="_blank">
+              <span class="resource-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"/><rect x="32" y="48" width="192" height="160" rx="8" opacity="0.2"/><polyline points="80 96 120 128 80 160" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="136" y1="160" x2="176" y2="160" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><rect x="32" y="48" width="192" height="160" rx="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg></span>
+              <span class="resource-text">
+                <strong>CMS CLI</strong>
+                <small>Local development tools</small>
+              </span>
+            </a>
+          </div>
+        </section>
+
+        <!-- Juicy Blog -->
+        <section class="settings-section">
+          <div class="section-header-with-subtitle">
+            <h2>Juicy Blog</h2>
+            <span class="section-subtitle">Freshly squeezed tips for marketers & developers</span>
+          </div>
+          <div class="blog-posts" id="blogPosts">
+            <div class="blog-loading">Loading posts...</div>
+          </div>
+        </section>
+
+      </div><!-- /tab-resources -->
+
     </main>
 
     <!-- Pre-footer -->
