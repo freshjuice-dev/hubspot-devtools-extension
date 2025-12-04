@@ -10,8 +10,12 @@
  *   node scripts/generate-icons.js --input=icon.png   # Alternative syntax
  */
 
-const fs = require('fs-extra');
-const path = require('path');
+import fs from 'fs-extra';
+import path from 'path';
+import zlib from 'zlib';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const ICONS_DIR = path.join(__dirname, '..', 'src', 'assets', 'icons');
 const SIZES = [16, 32, 48, 128];
@@ -40,7 +44,7 @@ function parseArgs() {
 async function generateFromSource(inputFile) {
   let sharp;
   try {
-    sharp = require('sharp');
+    sharp = (await import('sharp')).default;
   } catch (e) {
     console.error('❌ "sharp" package is required for resizing images.');
     console.error('   Install it with: npm install sharp --save-dev\n');
@@ -95,8 +99,6 @@ async function generatePlaceholders() {
  * Create a placeholder PNG icon
  */
 function createPlaceholderIcon(size, filename) {
-  const zlib = require('zlib');
-
   // PNG signature
   const signature = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
 
