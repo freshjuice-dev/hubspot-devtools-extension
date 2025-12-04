@@ -27,7 +27,7 @@
         <div class="setting-item">
           <div class="setting-info">
             <label for="autoApplyToLinks">Auto-apply to page links</label>
-            <p class="setting-description">Automatically add active parameters to all internal links on the page</p>
+            <p class="setting-description">When enabled, all internal links on the page will be modified to include your active debug parameters. This way, clicking any link keeps your debug session active without manually re-enabling.</p>
           </div>
           <label class="toggle-switch">
             <input type="checkbox" id="autoApplyToLinks">
@@ -38,7 +38,7 @@
         <div class="setting-item">
           <div class="setting-info">
             <label for="showBadge">Show badge indicator</label>
-            <p class="setting-description">Display the number of active modes on the extension icon</p>
+            <p class="setting-description">Shows a small number on the extension icon indicating how many debug modes are currently active on the page (e.g., "2" if Debug Mode and Cache Buster are both on).</p>
           </div>
           <label class="toggle-switch">
             <input type="checkbox" id="showBadge">
@@ -49,7 +49,7 @@
         <div class="setting-item">
           <div class="setting-info">
             <label for="persistAcrossSessions">Persist across sessions</label>
-            <p class="setting-description">Remember toggle states when browser is closed</p>
+            <p class="setting-description">Automatically re-apply your saved debug modes when you visit allowed domains. Even after closing the browser, your debug parameters will be added to the URL when you return to these sites.</p>
           </div>
           <label class="toggle-switch">
             <input type="checkbox" id="persistAcrossSessions">
@@ -65,9 +65,10 @@
         <div class="setting-item vertical">
           <div class="setting-info">
             <label for="allowedDomains">Domains for auto-apply</label>
-            <p class="setting-description">When you enable debug modes on a page, the domain is automatically added here. Debug parameters will auto-apply on these domains. One domain per line.</p>
+            <p class="setting-description">These are the domains where the extension is active. Domains are automatically added when you enable debug modes via the popup or context menu. You can also manually add or remove domains here.</p>
           </div>
           <textarea id="allowedDomains" placeholder="example.com&#10;mysite.hubspot.com"></textarea>
+          <p class="field-hint">One domain per line (e.g., "mysite.com" or "preview.mysite.hubspotcms.com")</p>
         </div>
       </section>
 
