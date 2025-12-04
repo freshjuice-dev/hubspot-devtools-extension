@@ -99,6 +99,25 @@ npm run dev:firefox
 npm run release
 ```
 
+### Testing & Validation
+
+```bash
+# Run unit tests
+npm run test
+
+# Run ESLint
+npm run lint
+
+# Validate Chrome extension
+npm run validate:chrome
+
+# Validate Firefox extension
+npm run validate:firefox
+
+# Run all validations (lint + test + chrome + firefox)
+npm run validate
+```
+
 ### Project Structure
 
 ```
