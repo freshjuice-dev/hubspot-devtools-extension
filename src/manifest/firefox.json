@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "FreshJuice HubSpot DevTools",
   "description": "Quick access to HubSpot debug parameters and HubL documentation for CMS developers",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "developer": {
     "name": "FreshJuice",
     "url": "https://freshjuice.dev"
