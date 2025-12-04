@@ -5,9 +5,12 @@
  * Creates distributable zip files for Chrome and Firefox stores
  */
 
-const fs = require('fs-extra');
-const path = require('path');
-const archiver = require('archiver');
+import fs from 'fs-extra';
+import path from 'path';
+import archiver from 'archiver';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const args = process.argv.slice(2);
 const targetArg = args.find(a => a.startsWith('--target='));
