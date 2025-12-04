@@ -34,7 +34,7 @@ async function initOptions() {
   footerTagline.appendChild(document.createTextNode(randomPrefix + ' '));
 
   const alexLink = document.createElement('a');
-  alexLink.href = 'https://alex.zappa.dev';
+  alexLink.href = 'https://alex.zappa.dev?utm_source=freshjuice-hubspot-devtools';
   alexLink.target = '_blank';
   alexLink.textContent = 'Alex Zappa';
   footerTagline.appendChild(alexLink);
@@ -42,7 +42,7 @@ async function initOptions() {
   footerTagline.appendChild(document.createTextNode(' at '));
 
   const fjLink = document.createElement('a');
-  fjLink.href = 'https://freshjuice.dev';
+  fjLink.href = 'https://freshjuice.dev?utm_source=freshjuice-hubspot-devtools';
   fjLink.target = '_blank';
   fjLink.textContent = 'FreshJuice';
   footerTagline.appendChild(fjLink);
@@ -212,6 +212,7 @@ async function loadBlogPosts() {
       return;
     }
 
+    const utmParams = 'utm_source=freshjuice-hubspot-devtools';
     const postsHtml = posts.slice(0, 5).map(post => {
       const date = new Date(post.date_published).toLocaleDateString('en-US', {
         year: 'numeric',
@@ -220,9 +221,10 @@ async function loadBlogPosts() {
       });
       const author = post.author?.name || 'FreshJuice';
       const summary = post.summary || '';
+      const postUrl = post.url + (post.url.includes('?') ? '&' : '?') + utmParams;
 
       return `
-        <a href="${post.url}" target="_blank" class="blog-post">
+        <a href="${postUrl}" target="_blank" class="blog-post">
           <span class="blog-post-title">${post.title}</span>
           <span class="blog-post-summary">${summary}</span>
           <span class="blog-post-meta">${date} · ${author}</span>
@@ -231,7 +233,7 @@ async function loadBlogPosts() {
     }).join('');
 
     container.innerHTML = postsHtml + `
-      <a href="https://freshjuice.dev/blog/" target="_blank" class="blog-view-all">
+      <a href="https://freshjuice.dev/blog/?${utmParams}" target="_blank" class="blog-view-all">
         ${randomCta}
       </a>
     `;
