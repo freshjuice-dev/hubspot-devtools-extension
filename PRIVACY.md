@@ -2,7 +2,7 @@
 
 ## FreshJuice HubSpot DevTools
 
-**Last updated:** November 2025
+**Last updated:** December 2025
 
 ### Overview
 
@@ -48,6 +48,10 @@ The extension requires certain permissions to function:
 - **tabs**: To read the current tab URL and update badge
 - **activeTab**: To apply debug parameters to the current page
 - **host_permissions** (`<all_urls>`): To modify links on pages you visit (only on domains you've allowed)
+
+### External Links
+
+Links to external websites (HubSpot documentation, FreshJuice blog) include referral parameters (UTM tags) that allow those websites to identify traffic originating from this extension. This is standard practice for attribution and helps us understand how the extension is being used. No personal data is transmitted through these parameters.
 
 ### Third-Party Services
 
