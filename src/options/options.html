@@ -90,6 +90,28 @@
       <!-- Status Message -->
       <div class="status-message" id="statusMessage"></div>
 
+      <!-- Keyboard Shortcuts (info only, not a setting) -->
+      <section class="settings-section shortcuts-info">
+        <h2>Keyboard Shortcuts</h2>
+        <p class="setting-description">You can assign custom keyboard shortcuts to quickly toggle debug modes without opening the popup.</p>
+        <ul class="shortcuts-list">
+          <li><strong>Toggle Debug Mode</strong> — Add/remove hsDebug=true</li>
+          <li><strong>Toggle Cache Buster</strong> — Add/remove hsCacheBuster</li>
+          <li><strong>Toggle Developer Mode</strong> — Add/remove developerMode=true</li>
+        </ul>
+        <p class="shortcuts-instructions" id="shortcutsInstructions">
+          <!-- Chrome instructions (shown by default, hidden for Firefox) -->
+          <span id="chromeInstructions">
+            To configure, click <code class="copyable" data-copy="chrome://extensions/shortcuts">chrome://extensions/shortcuts</code> to copy, then paste in your address bar.
+          </span>
+          <!-- Firefox instructions (hidden by default, shown for Firefox) -->
+          <span id="firefoxInstructions" style="display: none;">
+            To configure, click <code class="copyable" data-copy="about:addons">about:addons</code> to copy, paste in your address bar.<br>
+            Then click ⚙️ → "Manage Extension Shortcuts"
+          </span>
+        </p>
+      </section>
+
       </div><!-- /tab-settings -->
 
       <!-- Resources Tab -->

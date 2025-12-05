@@ -70,6 +70,36 @@ function setupEventListeners() {
   saveButton.addEventListener('click', saveSettings);
   resetButton.addEventListener('click', resetSettings);
 
+  // Show correct keyboard shortcuts instructions based on browser
+  const isFirefox = typeof browser !== 'undefined' && typeof browser.runtime?.getBrowserInfo === 'function';
+  const chromeInstructions = document.getElementById('chromeInstructions');
+  const firefoxInstructions = document.getElementById('firefoxInstructions');
+
+  if (isFirefox) {
+    if (chromeInstructions) chromeInstructions.style.display = 'none';
+    if (firefoxInstructions) firefoxInstructions.style.display = 'inline';
+  }
+
+  // Click-to-copy for shortcut URLs
+  document.querySelectorAll('.copyable').forEach(el => {
+    el.addEventListener('click', async () => {
+      const textToCopy = el.dataset.copy || el.textContent;
+      try {
+        await navigator.clipboard.writeText(textToCopy);
+        // Show visual feedback
+        const originalText = el.textContent;
+        el.textContent = 'Copied!';
+        el.classList.add('copied');
+        setTimeout(() => {
+          el.textContent = originalText;
+          el.classList.remove('copied');
+        }, 1500);
+      } catch (err) {
+        console.error('Failed to copy:', err);
+      }
+    });
+  });
+
   // Tab switching
   const subtitles = {
     settings: 'Configure your development tools preferences',
@@ -199,6 +229,7 @@ async function loadBlogPosts() {
   if (!container) return;
 
   const randomCta = BLOG_CTAS[Math.floor(Math.random() * BLOG_CTAS.length)];
+  const utmParams = 'utm_source=freshjuice-hubspot-devtools';
 
   try {
     const response = await fetch('https://freshjuice.dev/feed.json');
@@ -207,40 +238,65 @@ async function loadBlogPosts() {
     const feed = await response.json();
     const posts = feed.items || [];
 
+    // Clear loading state
+    container.textContent = '';
+
     if (posts.length === 0) {
-      container.innerHTML = '<div class="blog-error">No posts available</div>';
+      const errorDiv = document.createElement('div');
+      errorDiv.className = 'blog-error';
+      errorDiv.textContent = 'No posts available';
+      container.appendChild(errorDiv);
       return;
     }
 
-    const utmParams = 'utm_source=freshjuice-hubspot-devtools';
-    const postsHtml = posts.slice(0, 5).map(post => {
+    // Create post elements safely using DOM methods
+    posts.slice(0, 5).forEach(post => {
       const date = new Date(post.date_published).toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
         day: 'numeric'
       });
       const author = post.author?.name || 'FreshJuice';
-      const summary = post.summary || '';
       const postUrl = post.url + (post.url.includes('?') ? '&' : '?') + utmParams;
 
-      return `
-        <a href="${postUrl}" target="_blank" class="blog-post">
-          <span class="blog-post-title">${post.title}</span>
-          <span class="blog-post-summary">${summary}</span>
-          <span class="blog-post-meta">${date} · ${author}</span>
-        </a>
-      `;
-    }).join('');
+      const link = document.createElement('a');
+      link.href = postUrl;
+      link.target = '_blank';
+      link.className = 'blog-post';
 
-    container.innerHTML = postsHtml + `
-      <a href="https://freshjuice.dev/blog/?${utmParams}" target="_blank" class="blog-view-all">
-        ${randomCta}
-      </a>
-    `;
+      const title = document.createElement('span');
+      title.className = 'blog-post-title';
+      title.textContent = post.title || '';
+
+      const summary = document.createElement('span');
+      summary.className = 'blog-post-summary';
+      summary.textContent = post.summary || '';
+
+      const meta = document.createElement('span');
+      meta.className = 'blog-post-meta';
+      meta.textContent = `${date} · ${author}`;
+
+      link.appendChild(title);
+      link.appendChild(summary);
+      link.appendChild(meta);
+      container.appendChild(link);
+    });
+
+    // Add "view all" link
+    const viewAllLink = document.createElement('a');
+    viewAllLink.href = `https://freshjuice.dev/blog/?${utmParams}`;
+    viewAllLink.target = '_blank';
+    viewAllLink.className = 'blog-view-all';
+    viewAllLink.textContent = randomCta;
+    container.appendChild(viewAllLink);
 
   } catch (error) {
     console.error('Failed to load blog posts:', error);
-    container.innerHTML = '<div class="blog-error">Failed to load posts</div>';
+    container.textContent = '';
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'blog-error';
+    errorDiv.textContent = 'Failed to load posts';
+    container.appendChild(errorDiv);
   }
 }
 

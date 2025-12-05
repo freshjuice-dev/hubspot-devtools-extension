@@ -551,5 +551,47 @@ async function injectContentScriptIntoActiveTab() {
   }
 }
 
+/**
+ * Handle keyboard shortcuts
+ */
+browserAPI.commands.onCommand.addListener(async (command) => {
+  // Get current active tab
+  const [tab] = await browserAPI.tabs.query({ active: true, currentWindow: true });
+  if (!tab || !tab.url || !tab.url.startsWith('http')) return;
+
+  // Map command to param key
+  const commandToParam = {
+    'toggle-debug': 'hsDebug',
+    'toggle-cache-buster': 'hsCacheBuster',
+    'toggle-developer-mode': 'developerMode'
+  };
+
+  const paramKey = commandToParam[command];
+  if (!paramKey) return;
+
+  try {
+    const url = new URL(tab.url);
+
+    if (url.searchParams.has(paramKey)) {
+      // Remove param
+      url.searchParams.delete(paramKey);
+    } else {
+      // Add param
+      if (paramKey === 'hsCacheBuster') {
+        url.searchParams.set(paramKey, Date.now().toString());
+      } else {
+        url.searchParams.set(paramKey, 'true');
+      }
+      // Add domain to allowed list
+      await addDomainToAllowedList(url.hostname);
+    }
+
+    // Update the tab
+    await browserAPI.tabs.update(tab.id, { url: url.toString() });
+  } catch (e) {
+    console.error('Failed to toggle param via shortcut:', e);
+  }
+});
+
 // Initialize badge on startup
 updateBadgeForActiveTab();

@@ -5,8 +5,11 @@
  * Builds for Chrome (MV3) and Firefox (MV2)
  */
 
-const fs = require('fs-extra');
-const path = require('path');
+import fs from 'fs-extra';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const args = process.argv.slice(2);
 const targetArg = args.find(a => a.startsWith('--target='));
@@ -85,10 +88,10 @@ async function main() {
   }
 
   if (watch) {
-    const chokidar = require('chokidar');
+    const chokidar = await import('chokidar');
     console.log('\n👀 Watching for changes...\n');
 
-    const watcher = chokidar.watch(path.join(SRC_DIR, '**/*'), {
+    const watcher = chokidar.default.watch(path.join(SRC_DIR, '**/*'), {
       ignoreInitial: true,
       ignored: /node_modules/
     });

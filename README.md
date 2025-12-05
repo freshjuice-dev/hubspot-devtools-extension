@@ -1,11 +1,14 @@
 # FreshJuice HubSpot DevTools
 
-A browser extension for HubSpot CMS developers with quick access to debug parameters and HubL documentation.
+[![Version](https://img.shields.io/github/v/release/freshjuice-dev/hubspot-devtools-extension)](https://github.com/freshjuice-dev/hubspot-devtools-extension/releases)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/users/jmlcckldioeofjchfaomgaimhpnlfgok?logo=googlechrome&logoColor=white&label=Chrome%20installs&color=4285F4)](https://chromewebstore.google.com/detail/jmlcckldioeofjchfaomgaimhpnlfgok)
+[![Firefox Add-ons](https://img.shields.io/amo/users/freshjuice-hubspot-devtools?logo=firefox&logoColor=white&label=Firefox%20installs&color=FF7139)](https://addons.mozilla.org/en-US/firefox/addon/freshjuice-hubspot-devtools/)
+[![GitHub stars](https://img.shields.io/github/stars/freshjuice-dev/hubspot-devtools-extension)](https://github.com/freshjuice-dev/hubspot-devtools-extension/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/freshjuice-dev/hubspot-devtools-extension)](https://github.com/freshjuice-dev/hubspot-devtools-extension/network/members)
+[![GitHub watchers](https://img.shields.io/github/watchers/freshjuice-dev/hubspot-devtools-extension)](https://github.com/freshjuice-dev/hubspot-devtools-extension/watchers)
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue?style=flat-square)](https://github.com/freshjuice-dev/hubspot-devtools-extension/releases)
-[![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)](LICENSE)
-[![Chrome Web Store](https://img.shields.io/badge/Chrome-Install-4285F4?style=flat-square&logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/jmlcckldioeofjchfaomgaimhpnlfgok)
-[![Firefox Add-ons](https://img.shields.io/badge/Firefox-Install-FF7139?style=flat-square&logo=firefox&logoColor=white)](https://addons.mozilla.org/en-US/firefox/addon/freshjuice-hubspot-devtools/)
+A browser extension for HubSpot CMS developers with quick access to debug parameters and HubL documentation.
 
 **[Learn more at freshjuice.dev/hubspot-devtools](https://freshjuice.dev/hubspot-devtools/)**
 
@@ -46,10 +49,8 @@ A browser extension for HubSpot CMS developers with quick access to debug parame
 
 ### Install from Store (Recommended)
 
-| Browser | Link |
-|---------|------|
-| Chrome | [![Chrome Web Store](https://img.shields.io/badge/Chrome_Web_Store-Install-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/jmlcckldioeofjchfaomgaimhpnlfgok) |
-| Firefox | [![Firefox Add-ons](https://img.shields.io/badge/Firefox_Add--ons-Install-FF7139?style=for-the-badge&logo=firefox&logoColor=white)](https://addons.mozilla.org/en-US/firefox/addon/freshjuice-hubspot-devtools/) |
+[![Chrome Web Store](https://img.shields.io/badge/Chrome_Web_Store-Install-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/jmlcckldioeofjchfaomgaimhpnlfgok)
+[![Firefox Add-ons](https://img.shields.io/badge/Firefox_Add--ons-Install-FF7139?style=for-the-badge&logo=firefox&logoColor=white)](https://addons.mozilla.org/en-US/firefox/addon/freshjuice-hubspot-devtools/)
 
 <details>
 <summary><strong>Manual Installation</strong></summary>
@@ -96,6 +97,25 @@ npm run dev:firefox
 
 # Create release zips
 npm run release
+```
+
+### Testing & Validation
+
+```bash
+# Run unit tests
+npm run test
+
+# Run ESLint
+npm run lint
+
+# Validate Chrome extension
+npm run validate:chrome
+
+# Validate Firefox extension
+npm run validate:firefox
+
+# Run all validations (lint + test + chrome + firefox)
+npm run validate
 ```
 
 ### Project Structure
