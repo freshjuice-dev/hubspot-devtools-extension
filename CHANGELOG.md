@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2025-12-05
+
+### Added
+- Keyboard shortcuts info section with browser-specific instructions
+- Click-to-copy functionality for shortcut URLs with visual feedback
+- Testing infrastructure with Vitest and ESLint
+- Chrome extension validator script
+
+### Changed
+- Updated README with GitHub badges (stars, forks, watchers, install counts)
+- Improved Firefox manifest with `data_collection_permissions`
+
+### Fixed
+- Content script errors on special pages by adding API safety checks
+- innerHTML security warning by using safe DOM methods
+
 ## [1.1.0] - 2025-12-04
 
 ### Added
