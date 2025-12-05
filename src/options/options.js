@@ -70,6 +70,36 @@ function setupEventListeners() {
   saveButton.addEventListener('click', saveSettings);
   resetButton.addEventListener('click', resetSettings);
 
+  // Show correct keyboard shortcuts instructions based on browser
+  const isFirefox = typeof browser !== 'undefined' && typeof browser.runtime?.getBrowserInfo === 'function';
+  const chromeInstructions = document.getElementById('chromeInstructions');
+  const firefoxInstructions = document.getElementById('firefoxInstructions');
+
+  if (isFirefox) {
+    if (chromeInstructions) chromeInstructions.style.display = 'none';
+    if (firefoxInstructions) firefoxInstructions.style.display = 'inline';
+  }
+
+  // Click-to-copy for shortcut URLs
+  document.querySelectorAll('.copyable').forEach(el => {
+    el.addEventListener('click', async () => {
+      const textToCopy = el.dataset.copy || el.textContent;
+      try {
+        await navigator.clipboard.writeText(textToCopy);
+        // Show visual feedback
+        const originalText = el.textContent;
+        el.textContent = 'Copied!';
+        el.classList.add('copied');
+        setTimeout(() => {
+          el.textContent = originalText;
+          el.classList.remove('copied');
+        }, 1500);
+      } catch (err) {
+        console.error('Failed to copy:', err);
+      }
+    });
+  });
+
   // Tab switching
   const subtitles = {
     settings: 'Configure your development tools preferences',
