@@ -195,21 +195,30 @@
    * Initialize content script
    */
   async function init() {
-    const api = typeof browser !== 'undefined' ? browser : chrome;
+    const api = (typeof browser !== 'undefined' && browser.runtime) ? browser :
+                (typeof chrome !== 'undefined' && chrome.runtime) ? chrome : null;
+
+    if (!api || !api.storage) return;
 
     try {
       const result = await api.storage.sync.get('state');
       state = result.state;
       updateEnabledState();
     } catch (e) {
-      console.error('HubSpot DevTools: Failed to initialize', e);
+      // Extension context may be invalidated, fail silently
     }
   }
 
   /**
    * Listen for messages from popup/background
    */
-  const api = typeof browser !== 'undefined' ? browser : chrome;
+  const api = (typeof browser !== 'undefined' && browser.runtime) ? browser :
+              (typeof chrome !== 'undefined' && chrome.runtime) ? chrome : null;
+
+  if (!api || !api.runtime) {
+    // Extension API not available, exit silently
+    return;
+  }
 
   api.runtime.onMessage.addListener((message, sender, sendResponse) => {
     switch (message.action) {

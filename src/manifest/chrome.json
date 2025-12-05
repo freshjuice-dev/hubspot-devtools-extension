@@ -35,18 +35,13 @@
   ],
   "commands": {
     "toggle-debug": {
-      "suggested_key": {
-        "default": "Ctrl+Shift+1",
-        "mac": "Command+Shift+1"
-      },
-      "description": "Toggle hsDebug=true"
+      "description": "Toggle Debug Mode"
     },
     "toggle-cache-buster": {
-      "suggested_key": {
-        "default": "Ctrl+Shift+2",
-        "mac": "Command+Shift+2"
-      },
       "description": "Toggle Cache Buster"
+    },
+    "toggle-developer-mode": {
+      "description": "Toggle Developer Mode"
     }
   }
 }
