@@ -1,0 +1,49 @@
+{
+  "manifest_version": 3,
+  "name": "FreshJuice HubSpot DevTools",
+  "description": "Quick access to HubSpot debug parameters and HubL documentation for CMS developers",
+  "version": "1.2.1",
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "HubSpot DevTools",
+    "default_icon": {
+      "16": "assets/icons/icon-16.png",
+      "32": "assets/icons/icon-32.png",
+      "48": "assets/icons/icon-48.png"
+    }
+  },
+  "background": {
+    "scripts": ["background/background.js"],
+    "persistent": false,
+    "preferred_environment": "document"
+  },
+  "permissions": [
+    "storage",
+    "tabs",
+    "activeTab",
+    "scripting",
+    "webNavigation",
+    "contextMenus"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["lib/browser-api.js", "lib/url-params.js", "content/content-script.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "commands": {
+    "toggle-debug": {
+      "description": "Toggle Debug Mode"
+    },
+    "toggle-cache-buster": {
+      "description": "Toggle Cache Buster"
+    },
+    "toggle-developer-mode": {
+      "description": "Toggle Developer Mode"
+    }
+  }
+}

@@ -16,7 +16,7 @@ const args = process.argv.slice(2);
 const targetArg = args.find(a => a.startsWith('--target='));
 const target = targetArg ? targetArg.split('=')[1] : 'all';
 
-const TARGETS = target === 'all' ? ['chrome', 'firefox'] : [target];
+const TARGETS = target === 'all' ? ['chrome', 'firefox', 'safari'] : [target];
 
 const ROOT_DIR = path.join(__dirname, '..');
 const DIST_DIR = path.join(ROOT_DIR, 'dist');

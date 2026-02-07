@@ -2,7 +2,7 @@
 
 /**
  * Build script for HubSpot DevTools extension
- * Builds for Chrome and Firefox (both MV3)
+ * Builds for Chrome, Firefox, and Safari (all MV3)
  */
 
 import fs from 'fs-extra';
@@ -16,7 +16,7 @@ const targetArg = args.find(a => a.startsWith('--target='));
 const target = targetArg ? targetArg.split('=')[1] : 'all';
 const watch = args.includes('--watch');
 
-const TARGETS = target === 'all' ? ['chrome', 'firefox'] : [target];
+const TARGETS = target === 'all' ? ['chrome', 'firefox', 'safari'] : [target];
 
 const ROOT_DIR = path.join(__dirname, '..');
 const SRC_DIR = path.join(ROOT_DIR, 'src');

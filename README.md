@@ -70,6 +70,24 @@ A browser extension for HubSpot CMS developers with quick access to debug parame
 3. Click the gear icon and select "Install Add-on From File..."
 4. Select `hubspot-devtools-firefox-*.zip`
 
+#### Safari (macOS)
+
+Requires Xcode installed on macOS.
+
+1. Clone the repo and build:
+   ```bash
+   git clone https://github.com/freshjuice-dev/hubspot-devtools-extension.git
+   cd hubspot-devtools-extension
+   npm install
+   npm run safari:convert
+   ```
+2. Open the generated Xcode project: `open dist/safari-xcode/*.xcodeproj`
+3. In Xcode, select your Personal Team, then **Product > Run** (Cmd+R)
+4. In Safari, enable the extension:
+   - **Safari > Settings > Advanced** > check "Show features for web developers"
+   - **Develop > Allow Unsigned Extensions**
+   - **Safari > Settings > Extensions** > enable "HubSpot DevTools"
+
 </details>
 
 ## Development
@@ -90,10 +108,15 @@ npm run build:all
 # Build for specific browser
 npm run build:chrome
 npm run build:firefox
+npm run build:safari
 
 # Watch mode for development
 npm run dev:chrome
 npm run dev:firefox
+npm run dev:safari
+
+# Convert Safari build to Xcode project (requires Xcode)
+npm run safari:convert
 
 # Create release zips
 npm run release
