@@ -222,6 +222,16 @@ const BLOG_CTAS = [
 ];
 
 /**
+ * Decode HTML entities in a string (e.g. &#39; → ')
+ * @param {string} str - String with HTML entities
+ * @returns {string} - Decoded string
+ */
+function decodeHTMLEntities(str) {
+  const doc = new DOMParser().parseFromString(str, 'text/html');
+  return doc.body.textContent || '';
+}
+
+/**
  * Fetch and render blog posts
  */
 async function loadBlogPosts() {
@@ -266,11 +276,11 @@ async function loadBlogPosts() {
 
       const title = document.createElement('span');
       title.className = 'blog-post-title';
-      title.textContent = post.title || '';
+      title.textContent = decodeHTMLEntities(post.title || '');
 
       const summary = document.createElement('span');
       summary.className = 'blog-post-summary';
-      summary.textContent = post.summary || '';
+      summary.textContent = decodeHTMLEntities(post.summary || '');
 
       const meta = document.createElement('span');
       meta.className = 'blog-post-meta';
