@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.1] - 2026-02-07
+
+### Changed
+- Unified Chrome and Firefox to Manifest V3 (removed MV2 code paths)
+- Bumped dependencies: addons-linter, archiver, chokidar, fs-extra, vitest
+
+### Fixed
+- HTML entity encoding in blog feed titles and summaries (e.g. `&#39;` → `'`)
+
 ## [1.2.0] - 2025-12-05
 
 ### Added
@@ -51,6 +60,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - One-click access to HubSpot Design Manager
 - Badge indicator showing active debug parameters
 - Settings page with customizable options
-- Support for Chrome (Manifest V3) and Firefox (Manifest V2)
+- Support for Chrome and Firefox (Manifest V3)
 - Dark mode support
 - Keyboard shortcuts for toggling debug modes

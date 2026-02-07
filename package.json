@@ -1,6 +1,6 @@
 {
   "name": "freshjuice-hubspot-devtools",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "FreshJuice HubSpot DevTools - A browser extension for HubSpot CMS developers with quick access to debug parameters and HubL documentation",
   "author": {
     "name": "FreshJuice",
@@ -57,14 +57,14 @@
     "validate": "npm run lint && npm run test && npm run validate:chrome && npm run validate:firefox"
   },
   "devDependencies": {
-    "addons-linter": "^9.3.0",
-    "archiver": "^7.0.0",
-    "chokidar": "^3.6.0",
-    "eslint": "^9.39.1",
+    "addons-linter": "^9.6.0",
+    "archiver": "^7.0.1",
+    "chokidar": "^5.0.0",
+    "eslint": "^9.39.2",
     "eslint-plugin-security": "^3.0.1",
-    "fs-extra": "^11.2.0",
+    "fs-extra": "^11.3.3",
     "sharp": "^0.34.5",
-    "vitest": "^4.0.15"
+    "vitest": "^4.0.18"
   },
   "engines": {
     "node": ">=22.0.0"

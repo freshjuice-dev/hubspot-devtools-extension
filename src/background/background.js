@@ -1,16 +1,10 @@
 /**
- * Unified Background Script for Chrome (MV3) and Firefox (MV2)
+ * Background Service Worker for Chrome and Firefox (both MV3)
  * Handles background tasks, badge updates, and messaging
  */
 
-// Detect browser API (works in both service worker and background script context)
+// Detect browser API (works in both Chrome and Firefox service worker context)
 const browserAPI = (typeof browser !== 'undefined' && browser.runtime) ? browser : chrome;
-
-// Detect if we're running MV3 (Chrome) or MV2 (Firefox)
-const isManifestV3 = browserAPI.runtime.getManifest().manifest_version === 3;
-
-// Badge API differs between MV2 and MV3
-const badgeAPI = isManifestV3 ? browserAPI.action : browserAPI.browserAction;
 
 // Default state
 const DEFAULT_STATE = {
@@ -413,7 +407,7 @@ async function updateBadgeForActiveTab() {
 
     // Check if badge should be shown at all
     if (!state.settings.showBadge) {
-      await badgeAPI.setBadgeText({ text: '' });
+      await browserAPI.action.setBadgeText({ text: '' });
       return;
     }
 
@@ -438,12 +432,12 @@ async function updateBadgeForActiveTab() {
 
     // Only show badge if domain is allowed and has active params
     if (!isAllowed || activeCount === 0) {
-      await badgeAPI.setBadgeText({ text: '' });
+      await browserAPI.action.setBadgeText({ text: '' });
       return;
     }
 
-    await badgeAPI.setBadgeText({ text: activeCount.toString() });
-    await badgeAPI.setBadgeBackgroundColor({ color: '#16a34a' });
+    await browserAPI.action.setBadgeText({ text: activeCount.toString() });
+    await browserAPI.action.setBadgeBackgroundColor({ color: '#16a34a' });
   } catch (error) {
     console.error('Failed to update badge:', error);
   }
@@ -515,23 +509,14 @@ async function applyParamsToTab(tabId, params) {
 
 /**
  * Inject content script into a tab
- * Uses different APIs for MV2 vs MV3
  * @param {number} tabId - Tab ID to inject into
  */
 async function injectContentScript(tabId) {
   try {
-    if (isManifestV3) {
-      // Chrome MV3 uses scripting API
-      await browserAPI.scripting.executeScript({
-        target: { tabId },
-        files: ['lib/browser-api.js', 'lib/url-params.js', 'content/content-script.js']
-      });
-    } else {
-      // Firefox MV2 uses tabs.executeScript
-      await browserAPI.tabs.executeScript(tabId, { file: 'lib/browser-api.js' });
-      await browserAPI.tabs.executeScript(tabId, { file: 'lib/url-params.js' });
-      await browserAPI.tabs.executeScript(tabId, { file: 'content/content-script.js' });
-    }
+    await browserAPI.scripting.executeScript({
+      target: { tabId },
+      files: ['lib/browser-api.js', 'lib/url-params.js', 'content/content-script.js']
+    });
   } catch (error) {
     console.error('Failed to inject content script:', error);
   }

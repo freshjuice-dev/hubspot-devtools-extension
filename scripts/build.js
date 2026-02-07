@@ -2,7 +2,7 @@
 
 /**
  * Build script for HubSpot DevTools extension
- * Builds for Chrome (MV3) and Firefox (MV2)
+ * Builds for Chrome and Firefox (both MV3)
  */
 
 import fs from 'fs-extra';

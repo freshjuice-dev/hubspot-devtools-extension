@@ -1,6 +1,6 @@
 /**
  * Cross-browser API wrapper
- * Provides unified API for Chrome (MV3) and Firefox (MV2)
+ * Provides unified API for Chrome and Firefox (both MV3)
  */
 (function() {
   'use strict';
