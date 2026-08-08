@@ -1,5 +1,6 @@
 # FreshJuice HubSpot DevTools
 
+> ⚠️ PRIVATE REPOSITORY — Proprietary and confidential. See [LICENSE](LICENSE).
 [![Version](https://img.shields.io/github/v/release/freshjuice-dev/hubspot-devtools-extension)](https://github.com/freshjuice-dev/hubspot-devtools-extension/releases)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/users/jmlcckldioeofjchfaomgaimhpnlfgok?logo=googlechrome&logoColor=white&label=Chrome%20installs&color=4285F4)](https://chromewebstore.google.com/detail/jmlcckldioeofjchfaomgaimhpnlfgok)
