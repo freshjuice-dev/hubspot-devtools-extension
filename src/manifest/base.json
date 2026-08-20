@@ -1,7 +1,7 @@
 {
   "name": "FreshJuice HubSpot DevTools",
   "short_name": "FJ HubSpot DevTools",
-  "version": "1.0.0",
+  "version": "1.2.1",
   "description": "Quick access to HubSpot debug parameters and HubL documentation for CMS developers",
   "author": "FreshJuice",
   "homepage_url": "https://freshjuice.dev",

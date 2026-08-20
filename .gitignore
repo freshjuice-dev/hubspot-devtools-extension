@@ -20,6 +20,7 @@ desktop.ini
 # IDE / Editor
 .idea/
 .vscode/
+
 *.swp
 *.swo
 *.sublime-workspace

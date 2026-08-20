@@ -76,7 +76,7 @@ A browser extension for HubSpot CMS developers with quick access to debug parame
 
 ### Prerequisites
 
-- Node.js 22+
+- Node.js 24+
 
 ### Setup
 

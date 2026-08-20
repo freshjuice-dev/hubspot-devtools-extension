@@ -501,7 +501,7 @@ async function applyParamsToTab(tabId, params) {
   const url = new URL(tab.url);
 
   Object.entries(params).forEach(([key, value]) => {
-    url.searchParams.set(key, typeof value === 'function' ? value() : value);
+    url.searchParams.set(key, value);
   });
 
   await browserAPI.tabs.update(tabId, { url: url.toString() });
