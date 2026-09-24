@@ -57,7 +57,7 @@
     "validate": "npm run lint && npm run test && npm run validate:chrome && npm run validate:firefox"
   },
   "devDependencies": {
-    "addons-linter": "^10.7.0",
+    "addons-linter": "^10.13.0",
     "archiver": "^8.0.0",
     "chokidar": "^5.0.0",
     "eslint": "^10.8.1",
